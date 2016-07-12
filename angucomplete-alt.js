@@ -34,6 +34,7 @@
 
     var MIN_LENGTH = 3;
     var MAX_LENGTH = 524288;  // the default max length per the html maxlength attribute
+    var MAX_LIST_LENGTH = 524288;
     var PAUSE = 500;
     var BLUR_TIMEOUT = 200;
 
@@ -50,7 +51,7 @@
         '  <div id="{{id}}_dropdown" class="angucomplete-dropdown" ng-show="showDropdown">' +
         '    <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>' +
         '    <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>' +
-        '    <div class="angucomplete-row" ng-repeat="result in results" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{\'angucomplete-selected-row\': $index == currentIndex}">' +
+        '    <div class="angucomplete-row" ng-repeat="result in results | limitTo:maxListLength" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{\'angucomplete-selected-row\': $index == currentIndex}">' +
         '      <div ng-if="imageField" class="angucomplete-image-holder">' +
         '        <img ng-if="result.image && result.image != \'\'" ng-src="{{result.image}}" class="angucomplete-image"/>' +
         '        <div ng-if="!result.image && result.image != \'\'" class="angucomplete-image-default"></div>' +
@@ -760,6 +761,7 @@
 
       // set max length (default to maxlength deault from html
       scope.maxlength = attrs.maxlength ? attrs.maxlength : MAX_LENGTH;
+      scope.maxListLength = attrs.maxListLength ? parseInt(attrs.maxListLength) : MAX_LIST_LENGTH;
 
       // register events
       inputField.on('keydown', keydownHandler);
