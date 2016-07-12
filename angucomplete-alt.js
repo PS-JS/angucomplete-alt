@@ -258,7 +258,9 @@
           if (!scope.showDropdown && scope.searchStr && scope.searchStr.length >= minlength) {
             initResults();
             scope.searching = true;
-            searchTimerComplete(scope.searchStr);
+            scope.$apply(function () {
+              searchTimerComplete(scope.searchStr);
+            });
           }
         }
         else if (which === KEY_ES) {
@@ -283,9 +285,14 @@
 
             scope.searching = true;
 
-            searchTimer = $timeout(function() {
+            if(scope.pause){
+              searchTimer = $timeout(function() {
+                searchTimerComplete(scope.searchStr);
+              }, scope.pause);
+            }else{
               searchTimerComplete(scope.searchStr);
-            }, scope.pause);
+            }
+
           }
 
           if (validState && validState !== scope.searchStr && !scope.clearSelected) {
@@ -553,7 +560,8 @@
           return;
         }
         if (scope.localData) {
-          scope.$apply(function() {
+
+          var setMatch = function () {
             var matches;
             if (typeof scope.localSearch() !== 'undefined') {
               matches = scope.localSearch()(str, scope.localData);
@@ -562,7 +570,9 @@
             }
             scope.searching = false;
             processResults(matches, str);
-          });
+          }
+          setMatch();
+          //scope.$apply(setMatch);
         }
         else if (scope.remoteApiHandler) {
           getRemoteResultsWithCustomHandler(str);
@@ -757,7 +767,7 @@
       scope.textSearching = attrs.textSearching ? attrs.textSearching : TEXT_SEARCHING;
       scope.textNoResults = attrs.textNoResults ? attrs.textNoResults : TEXT_NORESULTS;
       displaySearching = scope.textSearching === 'false' ? false : true;
-      displayNoResults = scope.textNoResults === 'false' ? false : true;
+      displayNoResults = displaySearching == false && scope.textNoResults === 'false' ? false : true;
 
       // set max length (default to maxlength deault from html
       scope.maxlength = attrs.maxlength ? attrs.maxlength : MAX_LENGTH;
