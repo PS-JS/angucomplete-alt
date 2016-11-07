@@ -14,7 +14,7 @@
   "license": "MIT",
   "main": "./angucomplete-alt.js",
   "dependencies": {
-    "angular-bsfy":">=1.5"
+    "angular":">=1.5"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
