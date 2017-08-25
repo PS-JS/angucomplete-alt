@@ -65,7 +65,7 @@
     );
 
     function link(scope, elem, attrs, ctrl) {
-      var inputField = elem.find('input');
+      var inputField = (attrs.textarea === "true") ? elem.find('textarea') : elem.find('input');
       var minlength = MIN_LENGTH;
       var searchTimer = null;
       var hideTimer;
